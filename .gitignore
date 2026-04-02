@@ -1,0 +1,4 @@
+data/*.csv
+*.pbix
+.DS_Store
+__pycache__/
