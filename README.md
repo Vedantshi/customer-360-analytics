@@ -52,7 +52,7 @@ This project builds a complete customer intelligence system to answer all three.
 
 | Script | Purpose |
 |--------|---------|
-| `00_data_cleaning.py` | Cleans raw CSV (1M+ → ~400K rows) with step-by-step audit log |
+| `00_data_cleaning.py` | Cleans raw CSV (1M+ → ~800K rows) with step-by-step audit log |
 | `09_visualization_eda.py` | Generates 4 EDA charts (revenue trend, country breakdown, day-of-week, distribution) |
 
 ## Dataset
