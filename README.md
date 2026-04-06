@@ -14,21 +14,6 @@ A UK-based online retailer with 4,338 customers and over 1 million transactions 
 
 This project builds a complete customer intelligence system to answer all three.
 
-### Dashboard 1 — Customer Segmentation Hub
-*Answers: Who are our customers and how valuable is each segment right now?*
-
-![Customer Segmentation Hub](screenshots/01_segmentation_hub.png)
-
-### Dashboard 2 — RFM Score Deep Dive
-*Answers: How are individual scores distributed and which combinations matter most?*
-
-![RFM Score Deep Dive](screenshots/02_rfm_deep_dive.png)
-
-### Dashboard 3 — Cohort Retention Heatmap
-*Answers: How well do we retain customers acquired in each month over time?*
-
-![Cohort Retention Heatmap](screenshots/03_cohort_heatmap.png)
-
 ## Key Findings
 
 | Finding | Detail |
@@ -38,6 +23,25 @@ This project builds a complete customer intelligence system to answer all three.
 | Churn risk | 340 high-value accounts showing active churn signals |
 | Recoverable revenue | GBP 174,000 at a conservative 30% reactivation rate |
 | Statistical validation | RFM segments confirmed with chi-square test (p < 0.01) |
+
+## Power BI Dashboards 🚧 In Progress
+
+Five interconnected dashboards backed by a star schema data model and 22+ DAX measures.
+
+### Dashboard 1 — Cohort Retention Heatmap
+*Answers: How well do we retain customers acquired in each month over time?*
+
+![Cohort Retention Heatmap](screenshots/03_cohort_heatmap.png.png)
+
+### Dashboard 2 — Customer Segmentation Hub
+*Answers: Who are our customers and how valuable is each segment right now?*
+
+![Customer Segmentation Hub](screenshots/01_segmentation_hub.png)
+
+### Dashboard 2 — RFM Score Deep Dive
+*Answers: How are individual scores distributed and which combinations matter most?*
+
+![RFM Score Deep Dive](screenshots/02_rfm_deep_dive.png.png)
 
 ## Tools & Techniques
 
