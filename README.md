@@ -2,6 +2,8 @@
 
 > End-to-end customer analytics platform built on 1M+ real retail transactions — from raw data cleaning to actionable segmentation and retention insights.
 
+> 🚧 **Work in Progress** — SQL scripts complete. Power BI dashboards in development. Case study PDF coming soon.
+
 ## Business Problem
 
 A UK-based online retailer with 4,338 customers and over 1 million transactions had no visibility into customer behaviour beyond aggregate monthly sales. Revenue was plateauing despite rising marketing spend. Leadership needed answers to three questions:
@@ -11,6 +13,21 @@ A UK-based online retailer with 4,338 customers and over 1 million transactions 
 3. Where should we focus retention spend for maximum ROI?
 
 This project builds a complete customer intelligence system to answer all three.
+
+### Dashboard 1 — Customer Segmentation Hub
+*Answers: Who are our customers and how valuable is each segment right now?*
+
+![Customer Segmentation Hub](screenshots/01_segmentation_hub.png)
+
+### Dashboard 2 — RFM Score Deep Dive
+*Answers: How are individual scores distributed and which combinations matter most?*
+
+![RFM Score Deep Dive](screenshots/02_rfm_deep_dive.png)
+
+### Dashboard 3 — Cohort Retention Heatmap
+*Answers: How well do we retain customers acquired in each month over time?*
+
+![Cohort Retention Heatmap](screenshots/03_cohort_heatmap.png)
 
 ## Key Findings
 
