@@ -9,32 +9,34 @@
 USE Customer360;
 GO
 
--- Step 1: Use LEAD() to find each customer's next purchase date
+DROP TABLE IF EXISTS churn_analysis;
+
 WITH purchase_gaps AS (
     SELECT
         CustomerID,
         InvoiceDate,
-        LEAD(InvoiceDate) OVER (PARTITION BY CustomerID ORDER BY InvoiceDate) AS next_purchase_date,
+        LEAD(InvoiceDate) OVER (
+            PARTITION BY CustomerID 
+            ORDER BY InvoiceDate) AS next_purchase_date,
         DATEDIFF(DAY, InvoiceDate,
-            LEAD(InvoiceDate) OVER (PARTITION BY CustomerID ORDER BY InvoiceDate)
-        ) AS gap_days
+            LEAD(InvoiceDate) OVER (
+                PARTITION BY CustomerID 
+                ORDER BY InvoiceDate)) AS gap_days
     FROM vw_cleaned_orders
 ),
-
--- Step 2: Aggregate gap statistics per customer
 customer_gaps AS (
     SELECT
         CustomerID,
-        AVG(CAST(gap_days AS FLOAT)) AS avg_gap_days,
-        MAX(gap_days) AS max_gap_days,
-        STDEV(gap_days) AS stddev_gap_days,
+        -- ISNULL handles single-purchase customers who have no gap
+        ISNULL(AVG(CAST(gap_days AS FLOAT)), 0) AS avg_gap_days,
+        ISNULL(MAX(gap_days), 0)                AS max_gap_days,
+        ISNULL(STDEV(gap_days), 0)              AS stddev_gap_days,
         COUNT(*) AS total_purchases
     FROM purchase_gaps
-    WHERE gap_days IS NOT NULL
+    -- FIXED: Removed WHERE gap_days IS NOT NULL
+    -- This was excluding 111 single-purchase customers
     GROUP BY CustomerID
 ),
-
--- Step 3: Calculate Z-scores and churn risk
 gap_zscore AS (
     SELECT
         cg.CustomerID,
@@ -42,10 +44,10 @@ gap_zscore AS (
         cg.max_gap_days,
         cg.stddev_gap_days,
         cg.total_purchases,
-        -- Z-score: how many std deviations is the max gap from the avg?
         CASE
             WHEN cg.stddev_gap_days > 0
-            THEN (cg.max_gap_days - cg.avg_gap_days) / cg.stddev_gap_days
+            THEN (cg.max_gap_days - cg.avg_gap_days) 
+                / cg.stddev_gap_days
             ELSE 0
         END AS gap_zscore,
         rs.recency_days,
@@ -54,21 +56,18 @@ gap_zscore AS (
     FROM customer_gaps cg
     JOIN rfm_scores rs ON cg.CustomerID = rs.CustomerID
 )
-
 SELECT
     *,
-    -- Composite churn risk score (0-100)
-    -- Weights: Recency 40%, Gap Trend 30%, Value Decline 20%, Z-Score 10%
     CASE
         WHEN (
             (CASE WHEN recency_days > 180 THEN 40
-                  WHEN recency_days > 90 THEN 25
-                  WHEN recency_days > 30 THEN 10
+                  WHEN recency_days > 90  THEN 25
+                  WHEN recency_days > 30  THEN 10
                   ELSE 0 END)
             +
-            (CASE WHEN max_gap_days > avg_gap_days * 2 THEN 30
+            (CASE WHEN max_gap_days > avg_gap_days * 2   THEN 30
                   WHEN max_gap_days > avg_gap_days * 1.5 THEN 20
-                  WHEN max_gap_days > avg_gap_days THEN 10
+                  WHEN max_gap_days > avg_gap_days        THEN 10
                   ELSE 0 END)
             +
             (CASE WHEN total_monetary_value < 100 THEN 20
@@ -81,13 +80,13 @@ SELECT
         ) > 100 THEN 100
         ELSE (
             (CASE WHEN recency_days > 180 THEN 40
-                  WHEN recency_days > 90 THEN 25
-                  WHEN recency_days > 30 THEN 10
+                  WHEN recency_days > 90  THEN 25
+                  WHEN recency_days > 30  THEN 10
                   ELSE 0 END)
             +
-            (CASE WHEN max_gap_days > avg_gap_days * 2 THEN 30
+            (CASE WHEN max_gap_days > avg_gap_days * 2   THEN 30
                   WHEN max_gap_days > avg_gap_days * 1.5 THEN 20
-                  WHEN max_gap_days > avg_gap_days THEN 10
+                  WHEN max_gap_days > avg_gap_days        THEN 10
                   ELSE 0 END)
             +
             (CASE WHEN total_monetary_value < 100 THEN 20
@@ -99,7 +98,6 @@ SELECT
                   ELSE 0 END)
         )
     END AS churn_risk_score,
-    -- Risk tier classification
     CASE
         WHEN recency_days > 90 THEN 'Churned'
         ELSE 'Active'
@@ -107,8 +105,8 @@ SELECT
 INTO churn_analysis
 FROM gap_zscore;
 
--- Add risk tier
 ALTER TABLE churn_analysis ADD risk_tier VARCHAR(20);
+
 UPDATE churn_analysis SET risk_tier =
     CASE
         WHEN churn_risk_score >= 70 THEN 'High Risk'
@@ -117,7 +115,12 @@ UPDATE churn_analysis SET risk_tier =
     END;
 
 -- Validation
-SELECT risk_tier, COUNT(*) AS customer_count,
+SELECT COUNT(DISTINCT CustomerID) AS total_customers 
+FROM churn_analysis;
+
+SELECT
+    risk_tier,
+    COUNT(*) AS customer_count,
     AVG(churn_risk_score) AS avg_risk_score
 FROM churn_analysis
 GROUP BY risk_tier;

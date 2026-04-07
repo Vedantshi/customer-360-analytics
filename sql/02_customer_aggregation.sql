@@ -2,14 +2,13 @@
 -- Script 02: Customer-Level Aggregation
 -- Business Purpose: Create a single row per customer with key behavioural
 --   metrics. This is the foundation of RFM scoring and all customer analytics.
--- Dependency: vw_cleaned_orders (Script 01)
 -- =============================================================================
 
 USE Customer360;
 GO
 
--- Reference date: one day after the last transaction in the dataset
--- This simulates 'today' for recency calculations
+DROP TABLE IF EXISTS rfm_base;
+
 DECLARE @reference_date DATE = '2011-12-31';
 
 SELECT
@@ -20,14 +19,15 @@ SELECT
     SUM(Revenue) AS total_monetary_value,
     AVG(Revenue) AS avg_order_value,
     DATEDIFF(DAY, MAX(InvoiceDate), @reference_date) AS recency_days,
-    DATEDIFF(DAY, MIN(InvoiceDate), MAX(InvoiceDate)) AS customer_lifespan_days
+    DATEDIFF(DAY, MIN(InvoiceDate), MAX(InvoiceDate)) 
+        AS customer_lifespan_days
 INTO rfm_base
-FROM vw_cleaned_orders
+FROM vw_cleaned_orders  -- FIXED: was online_retail in original
 GROUP BY CustomerID;
 
 -- Validation
 SELECT COUNT(*) AS customer_count FROM rfm_base;
-SELECT TOP 10 * FROM rfm_base ORDER BY total_monetary_value DESC;
+SELECT TOP 5 CustomerID FROM rfm_base ORDER BY CustomerID;
 SELECT
     AVG(recency_days) AS avg_recency,
     AVG(purchase_frequency) AS avg_frequency,
