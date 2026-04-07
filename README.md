@@ -28,17 +28,22 @@ This project builds a complete customer intelligence system to answer all three.
 
 Five interconnected dashboards backed by a star schema data model and 22+ DAX measures.
 
-### Dashboard 1 — Cohort Retention Heatmap
+### Dashboard 1 — Product Analytics
+*Answers: How well do each products work with one another?*
+
+![Cohort Retention Heatmap](screenshots/05_Product_Analytics.png)
+
+### Dashboard 2 — Cohort Retention Heatmap
 *Answers: How well do we retain customers acquired in each month over time?*
 
 ![Cohort Retention Heatmap](screenshots/03_cohort_heatmap.png.png)
 
-### Dashboard 2 — Customer Segmentation Hub
+### Dashboard 3 — Customer Segmentation Hub
 *Answers: Who are our customers and how valuable is each segment right now?*
 
 ![Customer Segmentation Hub](screenshots/01_segmentation_hub.png)
 
-### Dashboard 2 — RFM Score Deep Dive
+### Dashboard 4 — RFM Score Deep Dive
 *Answers: How are individual scores distributed and which combinations matter most?*
 
 ![RFM Score Deep Dive](screenshots/02_rfm_deep_dive.png.png)
