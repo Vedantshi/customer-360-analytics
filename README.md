@@ -33,12 +33,12 @@ This project builds a complete customer intelligence system to answer all three.
 
 ## Dashboards
 
-### Dashboard 1 — Customer Segmentation Hub
-*Who are our customers and how valuable is each segment right now?*
+### Dashboard 1 — Cohort Retention Heatmap
+*How well do we retain customers acquired each month over time?*
 
-![Customer Segmentation Hub](screenshots/Customer_Segmentation_Hub.png)
+![Cohort Retention Heatmap](screenshots/Cohort_Retention.png)
 
-KPI cards show total customers, active customers, at-risk revenue, and churn rate at a glance. The treemap visualises segment size by customer count with colour encoding revenue contribution. The scatter plot maps every customer by purchase frequency against total spend, coloured by RFM segment. The bar chart ranks average order value by segment, showing Champions spending 2x more per order than At Risk customers.
+The signature visual of this project. Each row is an acquisition cohort. Each column is months since acquisition. Month 0 is always 100%. The steep drop at Month 1 across every cohort is the primary finding — the business is losing the majority of new customers immediately after their first purchase. The December 2009 cohort consistently outperforms all others and serves as the retention benchmark. The line chart below tracks revenue per customer across the top 3 cohorts over 12 months.
 
 ---
 
@@ -53,12 +53,12 @@ Chi-Square Test result: p < 0.01 — RFM segments are statistically distinct, no
 
 ---
 
-### Dashboard 3 — Cohort Retention Heatmap
-*How well do we retain customers acquired each month over time?*
+### Dashboard 3 — Customer Segmentation Hub
+*Who are our customers and how valuable is each segment right now?*
 
-![Cohort Retention Heatmap](screenshots/Cohort_Retention.png)
+![Customer Segmentation Hub](screenshots/Customer_Segmentation_Hub.png)
 
-The signature visual of this project. Each row is an acquisition cohort. Each column is months since acquisition. Month 0 is always 100%. The steep drop at Month 1 across every cohort is the primary finding — the business is losing the majority of new customers immediately after their first purchase. The December 2009 cohort consistently outperforms all others and serves as the retention benchmark. The line chart below tracks revenue per customer across the top 3 cohorts over 12 months.
+KPI cards show total customers, active customers, at-risk revenue, and churn rate at a glance. The treemap visualises segment size by customer count with colour encoding revenue contribution. The scatter plot maps every customer by purchase frequency against total spend, coloured by RFM segment. The bar chart ranks average order value by segment, showing Champions spending 2x more per order than At Risk customers.
 
 ---
 
@@ -139,18 +139,6 @@ The Power BI report uses a star schema with single-direction relationships:
 | Dim_Date | Dimension | Date, Year, Month, Quarter, MonthName, Year-Month |
 | Dim_Product | Dimension | StockCode, Description |
 | Dim_Geography | Dimension | Country |
-
----
-
-## Resume Bullets
-
-Built an RFM segmentation engine using SQL window functions (NTILE, LEAD, running SUM) across 1M+ retail transactions, identifying that 18% of customers drive 79% of revenue and 1,357 high-value accounts show active churn signals
-
-Designed a cohort retention model in SQL revealing 61% first-purchase attrition across all acquisition months, directly informing a reactivation strategy targeting £621K in recoverable revenue
-
-Validated customer segments with chi-square and t-test analysis in SQL, confirming statistically significant behavioural differences (p < 0.01, Cohen's d > 0.8) across RFM tiers
-
-Delivered a 5-dashboard Power BI platform with 22+ DAX measures, row-level security, what-if scenario simulation, and conditional formatting across a star schema data model
 
 ---
 
